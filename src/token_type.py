@@ -23,6 +23,7 @@ class TokenType(Enum):
     PLUS = auto()
     SEMICOLON = auto()
     SLASH = auto()
+    ASTERISK = auto()
     AND = auto()
     CLASS = auto()
     ELSE = auto()
