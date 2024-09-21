@@ -54,15 +54,36 @@ class Scanner:
             case "*":
                 self.add_token(token_type=TokenType.ASTERISK)
             case "!":
+                token_type = TokenType.BANG_EQUAL if self.match("=") else TokenType.BANG
+                self.add_token(token_type)
+            case "<":
+                token_type = TokenType.LESS_EQUAL if self.match("=") else TokenType.LESS
+                self.add_token(token_type)
+            case "=":
                 token_type = (
-                    TokenType.BANG_EQUAL if self.match("=") else TokenType.EQUAL
+                    TokenType.EQUAL_EQUAL if self.match("=") else TokenType.EQUAL
                 )
                 self.add_token(token_type)
+            case ">":
+                token_type = (
+                    TokenType.GREATER_EQUAL if self.match("=") else TokenType.GREATER
+                )
+                self.add_token(token_type)
+            case "/":
+                if self.match("/"):
+                    while self.peek() != "\n" and not self.is_at_end():
+                        self.advance()
+                else:
+                    self.add_token(TokenType.SLASH)
+            case " " | "\r" | "\t":
+                ...
+            case "\n":
+                self.line += 1
             case _:
                 error(
                     line=self.line,
                     message="Unexpected character.",
-                    loc=self.source[: self.current],
+                    loc=self.source[self.start : self.current],
                 )
 
     def add_token(self, token_type: TokenType) -> None:
@@ -88,6 +109,11 @@ class Scanner:
         c = self.source[self.current]
         self.current += 1
         return c
+
+    def peek(self) -> str:
+        if self.is_at_end():
+            return "\0"
+        return self.source[self.current]
 
     def is_at_end(self) -> bool:
         return self.current >= self.source_len

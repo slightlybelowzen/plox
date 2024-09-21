@@ -12,14 +12,14 @@ def run(source: str) -> None:
 
 def run_prompt() -> None:
     try:
-        inp = input(":> ")
+        inp = input(">>> ")
     except (EOFError, KeyboardInterrupt):
         print("\nshutting down repl")
         exit(0)
     while inp:
         run(inp)
         try:
-            inp = input(":> ")
+            inp = input(">>> ")
         except (EOFError, KeyboardInterrupt):
             print("\nshutting down repl")
             exit(0)
