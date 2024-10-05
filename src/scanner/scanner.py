@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
-from .token_type import TokenType
-from .error import error
+from src.scanner.keywords import KEYWORDS
+from src.scanner.token_type import TokenType
+from src.error import error
 
 
 @dataclass
@@ -82,11 +83,34 @@ class Scanner:
             case '"':
                 self.string()
             case _:
-                error(
-                    line=self.line,
-                    message="Unexpected character.",
-                    loc=self.source[self.start : self.current],
-                )
+                if c.isdigit():
+                    self.number()
+                elif c.isalpha():
+                    self.identifier()
+                else:
+                    error(
+                        line=self.line,
+                        message="Unexpected character.",
+                        loc=self.source[self.start : self.current],
+                    )
+
+    def identifier(self) -> None:
+        while self.peek().isalpha():
+            self.advance()
+
+        text = self.source[self.start : self.current]
+        token_type = KEYWORDS.get(text, TokenType.IDENTIFIER)
+
+        self.add_token(token_type)
+
+    def number(self) -> None:
+        while self.peek().isdigit():
+            self.advance()
+        if self.peek() == "." and self.peek_next().isdigit():
+            self.advance()
+            while self.peek().isdigit():
+                self.advance()
+        self.add_token(TokenType.NUMBER, float(self.source[self.start : self.current]))
 
     def string(self) -> None:
         while self.peek() != '"' and not self.is_at_end():
@@ -133,6 +157,11 @@ class Scanner:
         if self.is_at_end():
             return "\0"
         return self.source[self.current]
+
+    def peek_next(self) -> str:
+        if self.current + 1 >= self.source_len:
+            return "\0"
+        return self.source[self.current + 1]
 
     def is_at_end(self) -> bool:
         return self.current >= self.source_len

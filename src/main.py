@@ -1,7 +1,7 @@
 import pprint
 import sys
 
-from .scanner import Scanner
+from src.scanner.scanner import Scanner
 
 
 def run(source: str) -> None:
