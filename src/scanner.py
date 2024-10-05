@@ -79,6 +79,8 @@ class Scanner:
                 ...
             case "\n":
                 self.line += 1
+            case '"':
+                self.string()
             case _:
                 error(
                     line=self.line,
@@ -86,13 +88,30 @@ class Scanner:
                     loc=self.source[self.start : self.current],
                 )
 
-    def add_token(self, token_type: TokenType) -> None:
+    def string(self) -> None:
+        while self.peek() != '"' and not self.is_at_end():
+            if self.peek() == "\n":
+                self.line += 1
+            self.advance()
+        if self.is_at_end():
+            error(
+                self.line,
+                "Unterminated string.",
+                self.source[self.start : self.current],
+            )
+            return
+        self.advance()
+
+        string_literal = self.source[self.start + 1 : self.current - 1]
+        self.add_token(token_type=TokenType.STRING, literal=string_literal)
+
+    def add_token(self, token_type: TokenType, literal: object = None) -> None:
         self.tokens.append(
             Token(
                 lexemme=self.source[self.start : self.current],
                 line=self.line,
                 token_type=token_type,
-                literal=None,
+                literal=literal,
             )
         )
 
