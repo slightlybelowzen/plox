@@ -1,19 +1,7 @@
-from dataclasses import dataclass
-
 from src.scanner.keywords import KEYWORDS
 from src.scanner.token_type import TokenType
 from src.error import error
-
-
-@dataclass
-class Token:
-    lexemme: str
-    line: int
-    token_type: TokenType = TokenType.EOF
-    literal: object | None = None
-
-    def __repr__(self) -> str:
-        return f"Token(lexemme='{self.lexemme}', line={self.line}, token_type={self.token_type.name.split(".")[-1]}, literal={self.literal})"
+from src.scanner.token import Token
 
 
 class Scanner:
