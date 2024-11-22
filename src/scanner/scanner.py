@@ -92,13 +92,17 @@ class Scanner:
         self.add_token(token_type)
 
     def number(self) -> None:
+        type = "integer"
         while self.peek().isdigit():
             self.advance()
         if self.peek() == "." and self.peek_next().isdigit():
+            # if we encounter a digit after a decimal point, we know it's a float
+            type = "float"
             self.advance()
             while self.peek().isdigit():
                 self.advance()
-        self.add_token(TokenType.NUMBER, float(self.source[self.start : self.current]))
+        number_type = int if type == "integer" else float
+        self.add_token(TokenType.NUMBER, number_type(self.source[self.start : self.current]))
 
     def string(self) -> None:
         while self.peek() != '"' and not self.is_at_end():
