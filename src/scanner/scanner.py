@@ -106,6 +106,19 @@ class Scanner:
                 self.line += 1
             self.advance()
         if self.is_at_end():
+            """
+            For a case like this: `print "hello, world`
+            We want to report the error before the newline not after processing it
+            Right now we get this error:
+            Error: Unterminated string.
+                2 | "hello, world
+                                
+                                ˄-- Here.
+            Instead, we want this no matter how many newlines are present after the unterminated string:
+            Error: Unterminated string.
+                2 | "hello, world
+                                ˄-- Here.
+            """
             error(
                 self.line,
                 "Unterminated string.",

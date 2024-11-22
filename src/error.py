@@ -7,4 +7,4 @@ def report_error(line: int, loc: str, message: str) -> None:
     # TODO: make sure this string formatting is robust for other kinds of errors
     print(f"Error: {message}")
     print(f"  {line} | {loc}")
-    print(f"{"˄-- Here.".rjust(14 + len(loc))}")
+    print(f"{"˄-- Here.".rjust(15 + len(loc))}")
