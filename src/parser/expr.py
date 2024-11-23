@@ -34,20 +34,12 @@ class BinaryExpr(Expr):
     def accept[T](self, visitor: ExprVisitor[T]) -> T:
         return visitor.visit_binary_expr(self)
     
-    @classmethod
-    def create(cls, left: Expr, operator: Token, right: Expr) -> Self:
-        return cls(left, operator, right)
-
 @dataclass
 class GroupingExpr(Expr):
     expression: Expr
 
     def accept[T](self, visitor: ExprVisitor[T]) -> T:
         return visitor.visit_grouping_expr(self)
-
-    @classmethod
-    def create(cls, expression: Expr) -> Self:
-        return cls(expression)
 
 
 @dataclass
@@ -57,10 +49,6 @@ class UnaryExpr(Expr):
 
     def accept[T](self, visitor: ExprVisitor[T]) -> T:
         return visitor.visit_unary_expr(self)
-
-    @classmethod
-    def create(cls, operator: Token, right: Expr) -> Self:
-        return cls(operator, right)
 
 
 @dataclass
@@ -91,3 +79,23 @@ class ASTPrettyPrinter(ExprVisitor[str]):
         if expr.literal is None:
             return "None"
         return str(expr.literal)
+
+
+class RPNPrettyPrinter(ExprVisitor[str]):
+    def __init__(self) -> None:
+        self.stack: list[str] = []
+
+    def print(self, expr: Expr) -> str:
+        return expr.accept(self)
+    
+    def visit_binary_expr(self, expr: BinaryExpr) -> str:
+        return f"{self.print(expr.left)} {self.print(expr.right)} {expr.operator.lexemme}"
+         
+    def visit_grouping_expr(self, expr: GroupingExpr) -> str:
+        return f"{self.print(expr.expression)}"
+    
+    def visit_unary_expr(self, expr: UnaryExpr) -> str:
+        return f"{expr.operator.lexemme} {self.print(expr.right)}"
+    
+    def visit_literal_expr(self, expr: LiteralExpr) -> str:
+        return str(expr.literal) if expr.literal is not None else "None"
