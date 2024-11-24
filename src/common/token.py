@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.scanner.token_type import TokenType
+from src.common.token_type import TokenType
 
 
 @dataclass

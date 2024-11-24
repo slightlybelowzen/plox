@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Self
-from src.scanner.token import Token
+from src.common.token import Token
 
 class ExprVisitor[T](ABC): 
     @abstractmethod
