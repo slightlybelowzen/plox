@@ -3,6 +3,8 @@ from src.common.token_type import TokenType
 from src.common.error import error
 from src.common.token import Token
 
+class LexerError(Exception):
+    ...
 
 class Scanner:
     def __init__(self, source: str) -> None:
@@ -81,6 +83,7 @@ class Scanner:
                         message="Unexpected character.",
                         loc=self.source[self.start : self.current],
                     )
+                    raise LexerError()
 
     def identifier(self) -> None:
         while self.peek().isalpha():
@@ -111,7 +114,7 @@ class Scanner:
             self.advance()
         if self.is_at_end():
             """
-            For a case like this: `print "hello, world`
+            For a case like this: `print "hello, world\n`
             We want to report the error before the newline not after processing it
             Right now we get this error:
             Error: Unterminated string.
@@ -128,7 +131,7 @@ class Scanner:
                 "Unterminated string.",
                 self.source[self.start : self.current],
             )
-            return
+            raise LexerError()
         self.advance()
 
         string_literal = self.source[self.start + 1 : self.current - 1]

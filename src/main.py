@@ -24,6 +24,8 @@ def run_prompt() -> None:
 
 
 def main(args: list[str]) -> None:
+    # don't want a massive stack trace vomit when we raise an error
+    sys.tracebacklimit = -1
     if args == []:
         run_prompt()
     else:
