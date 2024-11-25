@@ -1,4 +1,4 @@
-from src.scanner.token_type import TokenType
+from src.common.token_type import TokenType
 
 
 KEYWORDS: dict[str, TokenType] = {

@@ -1,7 +1,7 @@
 from src.scanner.keywords import KEYWORDS
-from src.scanner.token_type import TokenType
-from src.error import error
-from src.scanner.token import Token
+from src.common.token_type import TokenType
+from src.common.error import error
+from src.common.token import Token
 
 
 class Scanner:
