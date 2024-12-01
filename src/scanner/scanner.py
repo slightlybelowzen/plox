@@ -3,8 +3,9 @@ from src.common.token_type import TokenType
 from src.common.error import error
 from src.common.token import Token
 
-class LexerError(Exception):
-    ...
+
+class LexerError(Exception): ...
+
 
 class Scanner:
     def __init__(self, source: str) -> None:
@@ -18,7 +19,10 @@ class Scanner:
     def get_tokens(self) -> list[Token]:
         while not self.is_at_end():
             self.start = self.current
-            self.scan_token()
+            try:
+                self.scan_token()
+            except LexerError:
+                return []
         return self.tokens
 
     def scan_token(self) -> None:
@@ -105,7 +109,9 @@ class Scanner:
             while self.peek().isdigit():
                 self.advance()
         number_type = int if type == "integer" else float
-        self.add_token(TokenType.NUMBER, number_type(self.source[self.start : self.current]))
+        self.add_token(
+            TokenType.NUMBER, number_type(self.source[self.start : self.current])
+        )
 
     def string(self) -> None:
         while self.peek() != '"' and not self.is_at_end():
