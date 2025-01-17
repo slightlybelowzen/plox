@@ -96,7 +96,7 @@ class Parser:
             expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
             return GroupingExpr(expr)
-        raise parse_error(self.peek(), "Expect expression.")
+        parse_error(self.peek(), "Expect expression.")
 
     def consume(self, token_type: TokenType, message: str) -> Token:
         if self.check(token_type):

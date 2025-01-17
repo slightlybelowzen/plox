@@ -125,7 +125,7 @@ class Scanner:
             Right now we get this error:
             Error: Unterminated string.
                 2 | "hello, world
-                                
+
                                 ˄-- Here.
             Instead, we want this no matter how many newlines are present after the unterminated string:
             Error: Unterminated string.
@@ -143,7 +143,9 @@ class Scanner:
         string_literal = self.source[self.start + 1 : self.current - 1]
         self.add_token(token_type=TokenType.STRING, literal=string_literal)
 
-    def add_token(self, token_type: TokenType, literal: object = None) -> None:
+    def add_token(
+        self, token_type: TokenType, literal: str | float | int | None = None
+    ) -> None:
         self.tokens.append(
             Token(
                 lexemme=self.source[self.start : self.current],

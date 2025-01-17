@@ -9,6 +9,7 @@ def error(line: int, message: str, loc: str) -> None:
 def report_error(line: int, loc: str, message: str) -> None:
     # TODO: make sure this string formatting is robust for other kinds of errors
     # See src.scanner.scanner.string() for an example where this doesn't quite work
+    # TODO: make this raise an actual error and not just print a string
     print(f"Error: {message}")
     print(f"  {line} | {loc}")
     print(f"{"˄-- Here.".rjust(15 + len(loc))}")
